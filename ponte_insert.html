@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ponte IOT - Insert</title>
+</head>
+
+<body>
+    <h1>Processando Inserção...</h1>
+    <script>
+        // 1. URL base do script PHP no InfinityFree
+        const INFINITYFREE_URL = 'https://akspluviometro.free.nf/registrar_medicao.php?';
+
+        // 2. Função para extrair parâmetros da URL (ex: 'volume=5')
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        const volume = getParameterByName('volume');
+
+        if (volume) {
+            // Se o parâmetro 'volume' foi recebido do Wokwi,
+            // redireciona o navegador (simulado pelo Wokwi/Browser)
+            // diretamente para a URL do InfinityFree.
+
+            const url_destino = INFINITYFREE_URL + 'volume=' + volume;
+
+            // O redirecionamento faz com que o navegador execute o JavaScript
+            // de validação do InfinityFree, obtendo o cookie necessário
+            // para que a requisição finalize no script PHP (registrar_medicao.php)
+            window.location.replace(url_destino);
+
+            // Este script irá redirecionar, fazendo com que o ESP32 receba um código HTTP 302/307 (Redirect)
+            // ou, após a validação do filtro, a resposta final "OK".
+
+        } else {
+            // Se o Wokwi não enviar o parâmetro
+            document.querySelector('h1').innerText = "ERRO: Parâmetro 'volume' ausente.";
+        }
+    </script>
+</body>
+
+</html>
