@@ -4,7 +4,7 @@
 <head>
     <title>Ponte IOT - Insert</title>
     <script>
-        // Função para extrair parâmetros da URL (mantida do código anterior)
+        // Função para extrair parâmetros da URL
         function getParameterByName(name, url = window.location.href) {
             name = name.replace(/[\[\]]/g, '\\$&');
             var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -18,13 +18,12 @@
         const INFINITYFREE_URL = 'https://akspluviometro.free.nf/registrar_medicao.php?volume=' + volume;
 
         // *** A CHAVE: Redirecionamento via Meta Refresh ***
-        // Isso é mais propenso a ser seguido pelo ESP32/cliente HTTP.
+        // Adiciona a tag de redirecionamento ao cabeçalho.
         if (volume) {
             document.write('<meta http-equiv="refresh" content="0; url=' + INFINITYFREE_URL + '">');
         } else {
-            document.write('<meta http-equiv="refresh" content="0; url=https://aldreykich.github.io/testesiot/erro.html">');
+            document.write('<h1>ERRO: Parâmetro \'volume\' ausente.</h1>');
         }
-
     </script>
 </head>
 
