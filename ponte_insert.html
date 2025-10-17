@@ -3,15 +3,8 @@
 
 <head>
     <title>Ponte IOT - Insert</title>
-</head>
-
-<body>
-    <h1>Processando Inserção... Aguarde o redirecionamento.</h1>
     <script>
-        // URL base do script PHP no InfinityFree
-        const INFINITYFREE_URL = 'https://akspluviometro.free.nf/registrar_medicao.php?';
-
-        // Função para extrair parâmetros da URL (ex: 'volume=5')
+        // Função para extrair parâmetros da URL (mantida do código anterior)
         function getParameterByName(name, url = window.location.href) {
             name = name.replace(/[\[\]]/g, '\\$&');
             var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -22,18 +15,21 @@
         }
 
         const volume = getParameterByName('volume');
+        const INFINITYFREE_URL = 'https://akspluviometro.free.nf/registrar_medicao.php?volume=' + volume;
 
+        // *** A CHAVE: Redirecionamento via Meta Refresh ***
+        // Isso é mais propenso a ser seguido pelo ESP32/cliente HTTP.
         if (volume) {
-            const url_destino = INFINITYFREE_URL + 'volume=' + volume;
-
-            // A CHAVE: Redireciona o navegador do Wokwi/usuário para a URL final do InfinityFree.
-            // Isso força a execução do filtro Anti-Bot de forma correta e limpa a requisição.
-            window.location.replace(url_destino);
-
+            document.write('<meta http-equiv="refresh" content="0; url=' + INFINITYFREE_URL + '">');
         } else {
-            document.querySelector('h1').innerText = "ERRO: Parâmetro 'volume' ausente.";
+            document.write('<meta http-equiv="refresh" content="0; url=https://aldreykich.github.io/testesiot/erro.html">');
         }
+
     </script>
+</head>
+
+<body>
+    <h1>Processando Inserção... Tentando Meta Refresh para InfinityFree.</h1>
 </body>
 
 </html>
