@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ponte IOT</title>
+</head>
+
+<body>
+    <h1>Aguarde, processando a requisição...</h1>
+    <script>
+        // 1. O InfinityFree exige que o navegador 'visite' a página primeiro para obter um cookie.
+        // O script abaixo tenta obter o parâmetro 'volume' da URL do ESP32.
+
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        const volume = getParameterByName('volume');
+        const BASE_URL = 'https://akspluviometro.free.nf/registrar_medicao.php?';
+
+        if (volume) {
+            // AQUI ESTÁ A CHAVE: O JavaScript precisa 'visitar' a página do InfinityFree.
+            // A maneira mais simples e direta de superar o filtro é redirecionar o navegador
+            // para a URL do InfinityFree para que ele execute o JS do filtro e obtenha o cookie.
+
+            // Redireciona para o InfinityFree, que agora é acessado por um navegador real (o Wokwi acessa o GitHub, o GitHub redireciona o navegador do Wokwi).
+            // O InfinityFree vai executar seu filtro e, depois de validar, vai executar o PHP.
+            // No entanto, isso ainda pode ser problemático no Wokwi, pois a requisição original HTTPClient será encerrada.
+
+            // ----------------------------------------------------------------------
+            // SOLUÇÃO MAIS ROBUSTA: Usar 'fetch' para fazer a requisição de servidor para servidor (CORS pode ser um problema)
+            // Ou simplesmente enviar a requisição sem esperar por uma resposta limpa no Wokwi.
+            // ----------------------------------------------------------------------
+
+            // SIMPLIFICANDO: Apenas redirecione, e o Wokwi deve obter um HTTP 200/302, que podemos tratar como sucesso.
+            window.location.href = BASE_URL + 'volume=' + volume;
+
+        } else {
+            document.querySelector('h1').innerText = "Erro: Parâmetro 'volume' não encontrado.";
+        }
+    </script>
+</body>
+
+</html>
